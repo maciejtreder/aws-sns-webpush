@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- node
+before_install:
+- pip install --user awscli
+- export PATH=$PATH:$HOME/.local/bin
+- npm install serverless -g
+deploy:
+  provider: script
+  script: ./deploy.sh
+  on:
+    tags: true
+    repo: maciejtreder/aws-sns-webpush
+env:
+  privateKey:
+    secure: FGhx+viA1shVmsmBcaFiwBJpUDM+QtsRawV/zne1F9vMAj7acT7eBtuJlOQ+ZP9AiZJry9UeTVzrPv51Vqo3R6gHl0TRximO/YYkX4FDjkGgusMcMrncw1YgPCWD7q8FQh/BmB/x88eVe0NNMegHdXHt484LJQHXjt2F4ghDWIm+wDGtbgzQesawaFc9SUF9cdHHlt8yc8GV11kKG0yUODsui4t4xV45J0nMiL50WgYPpjHf44a0q3rSI2c1LVkNXz7s3v9VMsGJUc1ntXRVL7m+eJa6h6eTOYYgV51dJaM7EL00occr8/wRkb9eRePgKE/gracdN36lWjg6RnvMcpSMbJTbxULDQHqd86iK5e+VQD4/LBGCCeQOvFnER+o9phBnWJVELVREy0QbaawuLgkYxDPZfv7BgzBvKGNopi4Ub2kvEMfiStMUVEsglpRuPG2A5Wl5GQqh8Dvb7+b8lEQ/XqPkuDcRpKwbUM/B5iJrEvxXFdHs+vWNfNZUMpi9Za46A/eOIGr/m5KGGsRT2U8/AbJGSNj/U9t15zEACbkfiNfirQxdYjwqGELq2L4F18PwD0PXVblZoUr1WbQBDpV3JYOdFdNSJMDwTc5jnp6Q95XnDe5z5uM5s/8W5ofgEI0Uth1do64sh5A+S3NPxYQDHiHOudoIFtaHL/EBPUA=
+  publicKey:
+    secure: VqKfQGksPRlGKDR3Qktr+1ZnsBu8e0miLWZtSuC1HH7S6WsVz9mM+cac8C8/oedPYJA1rL7Fv5//lYxZLAGhVBh+gO5yOWi3WyWA2s17wcznUyg7F8O4mGmtGhXwfW/rXB0JIEu/n4FGmoYO860yzCK+J+KpKOsuugaEYgCDysESAeJmtow43wu8Y/3+85365avA44U8kRNeCE+fz8WmifsA80bxWIPgC8r63AXLag7fVAfeDIeiToZIIEt/dZ5DJ0mPDhhr4zUxNme0/3bkOdwgDWp2WYWVzmS3tDfBhHoX/cJQUjNcv2ZyCZ6ufD2Hn8RwZr2Mg2zdWbtogVUB7jBfX6FA7xvOEyXc9P3hYWGyQy4mlMiT2aMmYbeq1S8RONnXwVAE4POKjRidUtLPfMFck67TEwvgD1JjlKLQz9UsIlO68oscQThoAEMMzrt/179tqmqfj35KHLBDobOCmeBgcnFmQy0DENVREx1Q/V5umcq9nq+zw68lQytoypyvMxT9/6GfZbgVNmnP6AUKO+i2XbpCNPDSIewGzg7fO3txGT9h0DZzddl4NdZi4BNtjh0j5nSE1PXjiMvq2NHQwowgjssgGQO9BA8AzVHawyqG7DfFkV0DlhPsHF0Z2jq5SOZRjlREZ2ynVDlSIB9IvMJKbpo8JZGXsiCwpkwALRo=

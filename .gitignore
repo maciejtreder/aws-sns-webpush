@@ -1,0 +1,6 @@
+.idea
+.serverless
+*.iml
+target
+output-sam.yaml
+.DS_Store

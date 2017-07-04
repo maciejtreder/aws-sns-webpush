@@ -1,0 +1,39 @@
+package com.maciejsobala.aws.webpush;
+
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+@Configuration
+@ComponentScan("com.maciejsobala.aws.webpush")
+public class AwsWebPushApp {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:8000", "https://www.angular-universal-serverless.maciejtreder.com");
+            }
+        };
+    }
+
+    @Bean
+    public DynamoDBMapper mapper(DynamoDBMapperConfig config) {
+        return new DynamoDBMapper(AmazonDynamoDBClientBuilder.defaultClient(), config);
+    }
+
+    @Bean
+    public DynamoDBMapperConfig dynamoDBMapperConfig() {
+        DynamoDBMapperConfig.Builder builder = DynamoDBMapperConfig.builder();
+        builder.setTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(System.getenv("TABLE_NAME")));
+        return builder.build();
+    }
+}
+
