@@ -1,18 +1,31 @@
-language: node_js
-node_js:
-- node
-before_install:
-- pip install --user awscli
-- export PATH=$PATH:$HOME/.local/bin
-- npm install serverless -g
-deploy:
-  provider: script
-  script: ./deploy.sh
-  on:
-    tags: true
-    repo: maciejtreder/aws-sns-webpush
+jobs:
+
+  include:
+  - stage: prepare
+    language: java
+    jdk: oraclejdk8
+    before_install:
+    - pip install --user awscli
+    - export PATH=$PATH:$HOME/.local/bin
+    script: mvn clean package
+    after_success:
+    - aws s3 cp ./target/aws-sns-webpush-1.0-SNAPSHOT.jar s3://travis-mtr/aws-sns-webpush/
+
+  - stage: deploy
+    language: node_js
+    node_js: node
+    before_install:
+    - pip install --user awscli
+    - export PATH=$PATH:$HOME/.local/bin
+    - aws s3 sync s3://travis-mtr/aws-sns-webpush/ ./target
+    - ls -la ./target
+    - npm install serverless -g
+    script: serverless deploy
+    
 env:
-  privateKey:
-    secure: FGhx+viA1shVmsmBcaFiwBJpUDM+QtsRawV/zne1F9vMAj7acT7eBtuJlOQ+ZP9AiZJry9UeTVzrPv51Vqo3R6gHl0TRximO/YYkX4FDjkGgusMcMrncw1YgPCWD7q8FQh/BmB/x88eVe0NNMegHdXHt484LJQHXjt2F4ghDWIm+wDGtbgzQesawaFc9SUF9cdHHlt8yc8GV11kKG0yUODsui4t4xV45J0nMiL50WgYPpjHf44a0q3rSI2c1LVkNXz7s3v9VMsGJUc1ntXRVL7m+eJa6h6eTOYYgV51dJaM7EL00occr8/wRkb9eRePgKE/gracdN36lWjg6RnvMcpSMbJTbxULDQHqd86iK5e+VQD4/LBGCCeQOvFnER+o9phBnWJVELVREy0QbaawuLgkYxDPZfv7BgzBvKGNopi4Ub2kvEMfiStMUVEsglpRuPG2A5Wl5GQqh8Dvb7+b8lEQ/XqPkuDcRpKwbUM/B5iJrEvxXFdHs+vWNfNZUMpi9Za46A/eOIGr/m5KGGsRT2U8/AbJGSNj/U9t15zEACbkfiNfirQxdYjwqGELq2L4F18PwD0PXVblZoUr1WbQBDpV3JYOdFdNSJMDwTc5jnp6Q95XnDe5z5uM5s/8W5ofgEI0Uth1do64sh5A+S3NPxYQDHiHOudoIFtaHL/EBPUA=
-  publicKey:
-    secure: VqKfQGksPRlGKDR3Qktr+1ZnsBu8e0miLWZtSuC1HH7S6WsVz9mM+cac8C8/oedPYJA1rL7Fv5//lYxZLAGhVBh+gO5yOWi3WyWA2s17wcznUyg7F8O4mGmtGhXwfW/rXB0JIEu/n4FGmoYO860yzCK+J+KpKOsuugaEYgCDysESAeJmtow43wu8Y/3+85365avA44U8kRNeCE+fz8WmifsA80bxWIPgC8r63AXLag7fVAfeDIeiToZIIEt/dZ5DJ0mPDhhr4zUxNme0/3bkOdwgDWp2WYWVzmS3tDfBhHoX/cJQUjNcv2ZyCZ6ufD2Hn8RwZr2Mg2zdWbtogVUB7jBfX6FA7xvOEyXc9P3hYWGyQy4mlMiT2aMmYbeq1S8RONnXwVAE4POKjRidUtLPfMFck67TEwvgD1JjlKLQz9UsIlO68oscQThoAEMMzrt/179tqmqfj35KHLBDobOCmeBgcnFmQy0DENVREx1Q/V5umcq9nq+zw68lQytoypyvMxT9/6GfZbgVNmnP6AUKO+i2XbpCNPDSIewGzg7fO3txGT9h0DZzddl4NdZi4BNtjh0j5nSE1PXjiMvq2NHQwowgjssgGQO9BA8AzVHawyqG7DfFkV0DlhPsHF0Z2jq5SOZRjlREZ2ynVDlSIB9IvMJKbpo8JZGXsiCwpkwALRo=
+  global:
+  - AWS_REGION: eu-central-1
+  - secure: lpnic3n5IHJgC0t2n4lEgBF/peuT0N6cLbo7UD/y+2k8UEApqql0EVcZKjA8lXPLROzCvJ5N+IPi2go6qLnChkTDi21aZyHj7y/qZez5ndD8uqCJhlQ3jY0fG/aqLCE5SAbd/7lGphZWphiia2SvKXBE5X3nsouUVwnbMs7lDyDHzFh9XcadNRS+KIHPPBlhaaPDEPz9JgvhycDHxSaiFtjOxP5qpgu8emSABVHU185doGAhujYZ3NhuCKVSRB3uwWbWemGG4Z26Qf4TwJAQc9ff1G3rxbk1dOmELJ161vmIrawQI9q1FVfQGkfhwnirKg++j8rK70UZlXlKoZFB42SfUkWjewICNb657ZeMaa3tFjBqy6+d/WBaksl5LQIyV5fTstbFoVGnkI4hcKjH2JBnnPf45e/pQ05vPvoURCaL+LF2a8xPNn13GlIrLcnEo81oLF236tgvUaIuya8+oWYG2LRjGs0ZZR2B++sRbv90vQ4x28Bk//SH7EuDCRoRqVi0ClDjPFc01vMMZT4yQhv/9NFSVrh1gqVWpp66VL/9vKmCugj86/PnExe/hNvBLxlAYiYH/Ubl0m8VrsRJDGUJivZxVZzHgFZZjxaT+gUDADj4APeoHfAbdZ+54bM/hqC+EgnecXBU+Pcv9ekMPeXcb25m/K5zERF7OSV5Seo=
+  - secure: KLl6U9AlzQ/zkrtJYe4yDmIZ6sgM56KSNcuNJCGNaOjbNnThLf2XBzGVlkjCg6Ops4DyrCKLQBrI1qntsOU3/xsAUnksOxv0EeFDthwAavRhcKSTxQNaty5/xMF1UfpAjtU3dyU28o2poZn1zx0fjPucPemOkhr9kkh5k9Wpc/FEzNgg4C7J/2rycMIrG3ZQqCZJyb55Ga/smBe3ixQnU1GJPCykfMTohIEGNU+r5iBavApnrExJPmtWykkJRRLsegmBMo7wfhzHzC2jbpvOQhzWZbqOuQ2+8kxM8dbQ3Auk833PbPSWUFlhJ4t7zYHQexJte/zlK1j6/Vi1oBnfwEmSDZTLKVsQjmz2ZxA721txMCqjF0x9J9og1X9dFHXj6Eu2+0TDekahI9PlekAxOxfE9kpvLV6P8COhQgL7vO43kl8FcD0dww067ohCd9rsgC1+ENO7PBg3DVM5PvSXznYkj9ou/dFxJzkgP225P+UzI52eVMos2TTK33n8mxwyx+UA7hFNIJcW5NNoDrIV6Omoxlqk5Rs1bzH6V4M61U1h9hftW9LeG1W+6Ux7UZJ5Z0CpPbplmlYbU2x1tc1PR38Qa1TfqUSDn1B9ztA3ldjYnYRO3C+kjNwVKOr+cH0POaqWl2nQscgoKCFy2VL0bqc1/p4NnPBSVVzCeKIROsM=
+  - secure: CNErzKcb7VeQkg0EK0cbc4ubKS9jF2aCSWkWj9MzdP4MZr9VH6kHl6p/K5r3srxj/dVg6UqMW9IFmSgoxaFFBciPcpkzc2a+GSXIQ6Sq/m5M+8+fRifdSQ8qkQS4Xmwo5Aq9HCOTfYJzWLv0N8ZBXeULI7JdiXF2hvuKQdTODtyRhU5VOdJ/Nh1EqwsAWl1ycR9TERTAOUovYvig3JMeMNKZ4FAfuXQnhhU4EW5GirZ7vxEXRe9gCtXogzgLbInCP/KWaDQJfZqukH9qgIr+IUC0tcbruVEcebUF2bCHaQQ66I5T/LhnUawojrP3DRWLX85fcoTQHj/eQTzidU1Gbk3eStvQlEBnQyBf0MIUF2h+7dNjQ3itbXLByMTN00Od23Nogk0oMEPvaqVxomg5/Wccux4aGHWC6VYqgtOK9if9GAHUSXgon+66XPg2XDUVVb70R3iRKjOLKcZJ2AetmxicLgmHH54SQCf7YY+56hFFQGqTCiMbN12rphbF9Tx3mKcIxrDl+CwUsDhv/Op1kfLBNd99ENMMlar0wM86EPpPNmnH/YqfTlhTr1zah0SA8RzF15eLj5Plf1jSNuM3rdY1QP3LHgzZz0mwC7DFSG0kSCelA81KIN5ws4Ts+beuLmxhjQ2SlNX6MUd2We1fl36jmg4VxugaihASld4hB84=
+  - secure: w34qurrndeEtMyDFPcrj7KIZdnB/760lak2V+D95+bdkZT4PirJB6QTmeHte9ov9x38EALlX4TqO0TaAoYazUn0WrKjmauOgLoHTsx3hvM/lFJcz0UI0+0Z2+ptO0jbjWeqe9XfxEc5OdvFWMFX3nD3rfU1BjiT63pfKIcOC/xalk4GtAjBiQXJkSnQjfLrJCCnu0CTapVAGhFZUtEs307SjBIBZ1WmCEb9+M+aASMO7HVszMA2J6rhyBN1G/xYz2ek/9V6rFMERCS1Wfqh6zjY7Tn/TlOi11LkV+ilJQB38DYr3hAAswLOEutRql8cdUt5D0ZktoiczF1YAPBK/SRVd0W++tKsyvTzmW7OWHX4/gbB2RrDT5jJ0q8Ioigrbcgpl2wUqnlK16mqY06uZpoc8WnM3v6zKSBAQNtI62RF7I3d1pLnmbeM4nT4aB/dSmJPEztQVVJWj4c0zPXFQB0+ORQSyLMeKj7wTxRuY83HVYF7UmPU9IGwiNcZm9v78zeH0PwUqfyMqR9J92IT9sR7J436/b3q34I3IGdo9tlbioOJBEe+JzbCsGAQOkx7ir1Dx9pRHNUZkeqmgadFXcBu3QBOrLuu/wxrOALLttUkRXfHy8rg28VOQSbbcW7psgGz9tZ6iEDT+tYSR8EoMpaiP3h0epXfn5FjnHz0/gQk=

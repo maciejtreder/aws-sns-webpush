@@ -16,7 +16,8 @@ import java.security.GeneralSecurityException;
 import java.security.Security;
 
 /*
-TODO refactor to reuse Spring app.
+TODO
+refactor to reuse Spring app.
 https://stackoverflow.com/questions/44995180/lambda-sns-spring-integration
  */
 public class SnsHandler implements RequestHandler<SNSEvent, Object> {

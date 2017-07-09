@@ -1,4 +1,4 @@
-service: aws-sns-webpush-by-maciej-treder
+service: sns-webpush-by-maciej-treder
 
 provider:
   name: aws
@@ -9,8 +9,8 @@ provider:
   region: eu-central-1
   environment:
     TABLE_NAME: ${self:service}
-    PRIVATE_KEY: ${env:privateKey}
-    PUBLIC_KEY: ${env:publicKey}
+    PRIVATE_KEY: ${env:PRIVATE_KEY}
+    PUBLIC_KEY: ${env:PUBLIC_KEY}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -23,11 +23,11 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_subscriptions"
 
 package:
-  artifact: target/aws-webpush-1.0-SNAPSHOT.jar
+  artifact: target/aws-sns-webpush-1.0-SNAPSHOT.jar
   exclude:
     - ./**
   include:
-    - target/aws-webpush-1.0-SNAPSHOT.jar
+    - target/aws-sns-webpush-1.0-SNAPSHOT.jar
 
 functions:
   api:
