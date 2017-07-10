@@ -12,17 +12,6 @@ public class HttpHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
 
     SpringLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
     public AwsProxyResponse handleRequest(AwsProxyRequest awsProxyRequest, Context context) {
-        System.out.println(awsProxyRequest);
-        System.out.println(awsProxyRequest.getPath());
-        System.out.println(awsProxyRequest.getPathParameters());
-        System.out.println(awsProxyRequest.getHeaders());
-        System.out.println(awsProxyRequest.getHttpMethod());
-        System.out.println(awsProxyRequest.getStageVariables());
-        System.out.println(awsProxyRequest.getResource());
-        System.out.println(awsProxyRequest.getQueryString());
-        System.out.println(awsProxyRequest.isBase64Encoded());
-        System.out.println(awsProxyRequest.getRequestContext().getIdentity().getSourceIp());
-
 
         if(awsProxyRequest.getPath() == null) {//scheduler
             context.getLogger().log("warming up");
