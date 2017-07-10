@@ -1,4 +1,4 @@
-package com.maciejsobala.aws.webpush;
+package com.maciejtreder.aws.webpush;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;

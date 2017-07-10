@@ -1,4 +1,4 @@
-package com.maciejsobala.aws.webpush;
+package com.maciejtreder.aws.webpush;
 
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;

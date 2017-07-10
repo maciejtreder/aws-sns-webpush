@@ -1,4 +1,4 @@
-package com.maciejsobala.aws.webpush;
+package com.maciejtreder.aws.webpush;
 
 import nl.martijndwars.webpush.Subscription;
 import org.jose4j.lang.JoseException;

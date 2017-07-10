@@ -31,13 +31,13 @@ package:
 
 functions:
   api:
-    handler: com.maciejsobala.aws.webpush.handlers.HttpHandler::handleRequest
+    handler: com.maciejtreder.aws.webpush.handlers.HttpHandler::handleRequest
     events:
       - http: ANY {proxy+}
       - http: ANY /
 
   sns:
-    handler: com.maciejsobala.aws.webpush.handlers.SnsHandler::handleRequest
+    handler: com.maciejtreder.aws.webpush.handlers.SnsHandler::handleRequest
     events:
       - sns: ${self:service}
 
