@@ -18,12 +18,7 @@ public class SubscriptionStore {
     private DynamoDBMapper mapper;
 
     public void put(Subscription subscription) {
-        SubscriptionWrapper sw = new SubscriptionWrapper(subscription);
-        Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":val1", new AttributeValue().withS(sw.getKey()));
-        int rowCount = this.mapper.count(SubscriptionWrapper.class, new DynamoDBScanExpression().withFilterExpression("subscription = :val1").withExpressionAttributeValues(eav));
-        System.out.println(rowCount);
-        this.mapper.save(sw);
+        this.mapper.save(new SubscriptionWrapper(subscription));
     }
 
     public void delete(Subscription subscription) {
