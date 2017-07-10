@@ -21,7 +21,7 @@ public class SubscriptionStore {
         SubscriptionWrapper sw = new SubscriptionWrapper(subscription);
         Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":val1", new AttributeValue().withS(sw.getKey()));
-        int rowCount = this.mapper.count(SubscriptionWrapper.class, new DynamoDBScanExpression().withFilterExpression("subscription = :val1"));
+        int rowCount = this.mapper.count(SubscriptionWrapper.class, new DynamoDBScanExpression().withFilterExpression("subscription = :val1").withExpressionAttributeValues(eav));
         System.out.println(rowCount);
         this.mapper.save(sw);
     }
@@ -31,7 +31,6 @@ public class SubscriptionStore {
     }
 
     public Stream<Subscription> getAll() {
-//        new DynamoDBScanExpression().addFilterCondition();
         return this.mapper.scan(SubscriptionWrapper.class, new DynamoDBScanExpression()).parallelStream().map(subWrapper -> subWrapper.getSubscription());
     }
 }
