@@ -1,4 +1,4 @@
-package com.maciejsobala.aws.webpush;
+package com.maciejtreder.aws.webpush;
 
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;

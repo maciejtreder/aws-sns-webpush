@@ -1,4 +1,4 @@
-package com.maciejsobala.aws.webpush;
+package com.maciejtreder.aws.webpush;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -1,4 +1,4 @@
-package com.maciejsobala.aws.webpush;
+package com.maciejtreder.aws.webpush;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -17,7 +17,7 @@ import java.security.GeneralSecurityException;
 import java.security.Security;
 
 @Configuration
-@ComponentScan("com.maciejsobala.aws.webpush")
+@ComponentScan("com.maciejtreder.aws.webpush")
 public class AwsWebPushApp {
 
     @Value("${PRIVATE_KEY}")
