@@ -44,10 +44,9 @@ public class SnsHandler implements RequestHandler<SNSEvent, Object> {
 
     public Object handleRequest(SNSEvent event, Context context) {
         SNSEvent.SNS sns = event.getRecords().get(0).getSNS();
-        NotificationWrapper nw = new NotificationWrapper();
-        nw.setBody(sns.getMessage());
-        nw.setTitle(sns.getSubject());
-        Payload payload = new Payload(nw);
+        Payload payload = new Payload(
+                NotificationWrapper.builder().body(sns.getMessage()).title(sns.getSubject()).build()
+        );
 
         this.sendNotifications(payload);
 
