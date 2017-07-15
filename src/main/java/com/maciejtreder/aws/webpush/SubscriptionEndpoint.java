@@ -1,5 +1,8 @@
 package com.maciejtreder.aws.webpush;
 
+import com.google.gson.Gson;
+import com.maciejtreder.aws.webpush.model.NotificationWrapper;
+import com.maciejtreder.aws.webpush.model.Payload;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Subscription;
@@ -27,7 +30,11 @@ public class SubscriptionEndpoint {
     @RequestMapping(path = "/subscribe", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String subscribe(@RequestBody Subscription subscription) throws GeneralSecurityException, InterruptedException, JoseException, ExecutionException, IOException {
-        HttpResponse resp = this.pushService.send(new Notification(subscription, "Don't forget to star this repo on github!"));
+        NotificationWrapper nw = new NotificationWrapper();
+        nw.setTitle("Star on GitHub");
+        nw.setBody("Don't forget to star this repo on GitHub!");
+        Payload payload = new Payload(nw);
+        this.pushService.send(new Notification(subscription, new Gson().toJson(payload)));
         this.store.put(subscription);
         return "Subscription stored";
     }
