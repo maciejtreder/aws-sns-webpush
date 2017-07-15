@@ -7,7 +7,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
-import com.maciejtreder.aws.webpush.SubscriptionWrapper;
+import com.google.gson.Gson;
+import com.maciejtreder.aws.webpush.model.NotificationWrapper;
+import com.maciejtreder.aws.webpush.model.Payload;
+import com.maciejtreder.aws.webpush.model.SubscriptionWrapper;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -40,12 +43,19 @@ public class SnsHandler implements RequestHandler<SNSEvent, Object> {
 
 
     public Object handleRequest(SNSEvent event, Context context) {
-        this.sendNotifications(event.getRecords().get(0).getSNS().getMessage());
+        SNSEvent.SNS sns = event.getRecords().get(0).getSNS();
+        NotificationWrapper nw = new NotificationWrapper();
+        nw.setBody(sns.getMessage());
+        nw.setTitle(sns.getSubject());
+        Payload payload = new Payload(nw);
+
+        this.sendNotifications(payload);
 
         return null;
     }
 
-    private void sendNotifications(String payload) {
+    private void sendNotifications(Payload payload) {
+        String toSend = new Gson().toJson(payload);
         if(pushService == null) {
             try {
                 pushService = new PushService(this.publicKey, this.privateKey, "angular-universal-serverless by Maciej Treder <contact@maciejtreder.com>");
@@ -56,7 +66,7 @@ public class SnsHandler implements RequestHandler<SNSEvent, Object> {
         }
         dbMapper.scan(SubscriptionWrapper.class, new DynamoDBScanExpression()).parallelStream().map(wrapper -> wrapper.getSubscription()).forEach(sub -> {
             try {
-                pushService.send(new Notification(sub, payload));
+                pushService.send(new Notification(sub, toSend));
             } catch (Exception e) {
                 e.printStackTrace();
             }
