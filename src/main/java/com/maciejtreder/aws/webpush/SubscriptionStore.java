@@ -24,7 +24,6 @@ public class SubscriptionStore {
     }
 
     public Stream<Subscription> getAll() {
-//        new DynamoDBScanExpression().addFilterCondition();
         return this.mapper.scan(SubscriptionWrapper.class, new DynamoDBScanExpression()).parallelStream().map(subWrapper -> subWrapper.getSubscription());
     }
 }
