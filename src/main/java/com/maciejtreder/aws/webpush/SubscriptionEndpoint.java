@@ -6,7 +6,6 @@ import com.maciejtreder.aws.webpush.model.Payload;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Subscription;
-import org.apache.http.HttpResponse;
 import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,10 +29,7 @@ public class SubscriptionEndpoint {
     @RequestMapping(path = "/subscribe", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String subscribe(@RequestBody Subscription subscription) throws GeneralSecurityException, InterruptedException, JoseException, ExecutionException, IOException {
-        NotificationWrapper nw = new NotificationWrapper();
-        nw.setTitle("Star on GitHub");
-        nw.setBody("Don't forget to star this repo on GitHub!");
-        Payload payload = new Payload(nw);
+        Payload payload = new Payload(NotificationWrapper.builder().title("Star on GitHub").body("Don't forget to star this repo on GitHub!").build());
         this.pushService.send(new Notification(subscription, new Gson().toJson(payload)));
         this.store.put(subscription);
         return "Subscription stored";
