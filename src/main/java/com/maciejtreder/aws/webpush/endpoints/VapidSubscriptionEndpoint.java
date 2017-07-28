@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.concurrent.ExecutionException;
 
+@Profile("web")
 @RestController
 @EnableWebMvc
 @RequestMapping("/vapid")

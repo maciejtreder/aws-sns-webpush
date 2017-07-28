@@ -1,4 +1,4 @@
-service: sns-webpush-angular-universal
+service: sns-webpush-by-maciej-treder
 
 provider:
   name: aws

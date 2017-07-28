@@ -15,6 +15,7 @@ public class HttpHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
     {
         try {
             handler = SpringLambdaContainerHandler.getAwsProxyHandler(AwsWebPushApp.class);
+            handler.activateSpringProfiles("web");
         } catch (ContainerInitializationException e) {
             e.printStackTrace();
         }
