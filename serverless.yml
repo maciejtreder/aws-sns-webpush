@@ -1,5 +1,13 @@
 service: sns-webpush-angular-universal
 
+plugins:
+  - serverless-apigw-binary
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
+
 provider:
   name: aws
   runtime: java8
@@ -9,8 +17,9 @@ provider:
   region: eu-central-1
   environment:
     TABLE_NAME: ${self:service}
-    PRIVATE_KEY: ${env:PRIVATE_KEY}
-    PUBLIC_KEY: ${env:PUBLIC_KEY}
+    VAPID_PRIVATE_KEY: ${env:VAPID_PRIVATE_KEY}
+    VAPID_PUBLIC_KEY: ${env:VAPID_PUBLIC_KEY}
+    SAFARI_KEY_PASSWORD: ${env:SAFARI_KEY_PASSWORD}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,7 +29,10 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_subscriptions"
+      Resource:
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_vapidSubscriptions"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_safariSubscriptions"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_safariLogs"
 
 package:
   artifact: target/aws-sns-webpush-1.0-SNAPSHOT.jar
@@ -44,7 +56,7 @@ functions:
 
 resources:
   Resources:
-    TodosDynamoDbTable:
+    vapidSubscirptionsTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -59,4 +71,42 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: '${self:service}_subscriptions'
+        TableName: '${self:service}_vapidSubscriptions'
+    safariSubscriptionsTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: websitePushId
+            AttributeType: S
+          -
+            AttributeName: deviceToken
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: websitePushId
+            KeyType: HASH
+          -
+            AttributeName: deviceToken
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: '${self:service}_safariSubscriptions'
+    safariLogsTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: timestamp
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: timestamp
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: '${self:service}_safariLogs'

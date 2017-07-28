@@ -11,6 +11,17 @@ import com.maciejtreder.aws.webpush.AwsWebPushApp;
 public class HttpHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
 
     SpringLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
+
+    {
+        try {
+            handler = SpringLambdaContainerHandler.getAwsProxyHandler(AwsWebPushApp.class);
+            handler.activateSpringProfiles("web");
+        } catch (ContainerInitializationException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public AwsProxyResponse handleRequest(AwsProxyRequest awsProxyRequest, Context context) {
 
         if(awsProxyRequest.getPath() == null) {//scheduler
@@ -19,14 +30,6 @@ public class HttpHandler implements RequestHandler<AwsProxyRequest, AwsProxyResp
         }
 
         awsProxyRequest.setPath("/" + awsProxyRequest.getPathParameters().get("proxy"));
-        if (handler == null) {
-            try {
-                handler = SpringLambdaContainerHandler.getAwsProxyHandler(AwsWebPushApp.class);
-            } catch (ContainerInitializationException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
         return handler.proxy(awsProxyRequest, context);
     }
 }

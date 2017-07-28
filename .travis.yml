@@ -1,5 +1,4 @@
 jobs:
-
   include:
   - stage: prepare
     language: java
@@ -7,10 +6,12 @@ jobs:
     before_install:
     - pip install --user awscli
     - export PATH=$PATH:$HOME/.local/bin
+    - gem install push_package
+    - push_package -w pushPackage.raw/website.json -i pushPackage.raw/icon.iconset -c src/main/resources/cert.p12 -p $SAFARI_KEY_PASSWORD
+    - mv pushPackage.zip src/main/resources/web.com.maciejtreder.angular-universal-serverless.zip
     script: mvn clean package
     after_success:
     - aws s3 cp ./target/aws-sns-webpush-1.0-SNAPSHOT.jar s3://travis-mtr/aws-sns-webpush/
-
   - stage: deploy
     language: node_js
     node_js: node
@@ -18,10 +19,8 @@ jobs:
     - pip install --user awscli
     - export PATH=$PATH:$HOME/.local/bin
     - aws s3 sync s3://travis-mtr/aws-sns-webpush/ ./target
-    - ls -la ./target
-    - npm install serverless -g
-    script: serverless deploy
-    
+    - npm install
+    script: npm run serverless
 env:
   global:
   - AWS_REGION: eu-central-1
@@ -29,3 +28,4 @@ env:
   - secure: BcoO0fTGpoRXP/VOQdLeFkTRvGE04bOL1QGs6YWyy3yRzyxhaKVSRkrsezqCiwlev7gYNbwRX79R3BMFRfozszLH0Az4MpV22yoHzP/Ez2pm2U1iQcIssFyRhbIYFj1NPX49nJo9VXx3i8BSsDZMebC/VPkeYo/8YpMniyHugBQsVBofN1Qz+EpOcEdNPvV4nSE4mZcziLsQbJfLYDS/GLIGeG4aI8vxKVUJhdwNR6rWxrddEFU+SR+OvBedsRrr3iU+WWpbl648ESRrCI3cTiSeO8cB2mOU0SnFv4r9S0Odoz+xMc6+OWgDkm2KbS1jpMzsMUyvOCV8PDnrLiKShSVmgI1Cz4LdraKZ+0aDwKteDBQlMWXcDuVCkrr0nl6HMhmzOZiw5LNtbed6mRC1dltZoUy7yyJz/OOsZsp15FAZY9H2wRwBpsrjvc3tS64r89kCoV/z0zyRMIJGAT259WZKLXwy8yLvVnKFgIQ4tJNrPDlj5j/S10EtoN3kWJsvZ+TAF0BgGoUia56tBcFkd0UZyyVILP/xfXVRSdL+KpfboLpc26btUVH0sTGjAukVF0cghgOERK/AQCshNAV0MvN9qbJMn7nETebQ04yD8KyExFSy9nc7Kl5zScTCqzgPbY6EfjSb7jNxkP80UFkjQwjrOoW5OMe4UfXx/FqL03c=
   - secure: m9doJzLruvIrGZ1NmX7NzHaXIeGHTEhKSq9x99m2lOupkngPSYEzSEb7TS7nCoh+G5+Dji8rkqQasLHC2ekS5As5XlMadOctnByBKzgJdmLmJ5C57beTAc5/mvCy1BeCBoo0xQjKyKK+KRGORh1gfW6LeoqECEo02LStW6liq+y+e3PZZYHua9iE0euHWEpVRyRWVOcgSqtsmGT66wFauP2mGG0bfjlH8A42p5pGLpDuiOnqodNAG72bjzwe29uOMU8qtZAP3D3GX6qEg2tP1cm/JTS2KR11g/7uSNFOoV9TOXzhIjVAmRahhGoKHCEdrSJQKlfG+5kbt2MfzmltvhPohLd3TsA9qqcOHXbXc0S6VaouSxfIez4TCqMuNxgBRegRngF+eBxb6WPTWgKXCEZ4sL6crVnP7RVuBgsTB4gp7p+1tMLHCeZoH26RvBB8+CUP2foaorLb8rI3e/7uMXLc0jlS//OUWAU4ABFiZbPr1v4vYC48jJGiIjfXCUBelWs5rZqBojvbaZLzzKJxNreDSuCMV10vWyrXIi11V+xM/y/2/BxCDGDKj7tGi54lnObfIfnJ0RHdPx5pXI5eYji9VCIBgfufxzifGOoQQmV4qyyyUuq5pr7ewXHZrOlfXwTWanCZiQgzpOCgVByOQp/mW4cwZz5EKtrkM+2ma9w=
   - secure: Z2BaXkFyM7/G94hWCFVgaQDoHiuBdic3AFxkBgLI+7fTY+nQMr5oqlMPohUHIlksSk8jFrXVPb9O0EaIvN616taaaVxJq4P7Ei8qbhtxVUmZQQ+IZaPJihOLJrzHS/l3oBuI/7Yz4QZ/8jdFu4uoL/EDFCSKWOWVgFHE39lRMWM2pGtBYxpmpjm0wgX3PuBNiZXi2U7LCIrhs602oOn8XnZF8MMRZwVPsFNoPeuG70UX0JwHrLSskKR7cwGRMAZTgEoGU6ox36bNPD03XnRuN1gvtiVEGLJEzJcXPDyq/dFxMksaoRlA/EuXWsdLzDzeGgvxcXvi8dd+OfjbDqDXwsZ0+CbAgZhfh6p3mkaASGPq1hdfUC34ktohLDPg2hLKUEnKsON3KgDrKD62PzYjh4Pmj7367J75Qw1EkS5GCQIHfHNgEkgawnmRrbyrVNe0m4xbWLRi9Rb+wMfwVDTpnO8QZpNYVRAhXnNgEOmGLvgPce0MDkQ1hGk+2pEr95T/ZK0HB5fpzY5IHp4yEuRj3Uuk7TMhOndTT8wMPjGOrT+7OP3Wj/quSjDdll3Jv3kvnSwCNzmK8MAbjxHQdJecaAciXNPqxmXEkCpUazDaIMSgQRJ49dwhitUBX3lDJX0SqBfwR+EYxpaAm7kBIKfDpgEQ2n0QL8F+58547MQiEKY=
+  - secure: RIZeYIBQpKTKPchcNYAjajLYay/ta45mIOI0BK5noPbTU+6Sdjz6eII/lSTvKd99y1301rhfxh8oJXZuWpRSEea//Btk1h5STZK8MU4DooZsO3yS3RVuujNtv6DgPQYKBglLKcv5U4uUhlsYvuqZohpfST5QJUxsIUMgchOMwzsrTeirEYpHGVOIt7irj97JmiEEFIyAua7GOkoZRmyCW3MFgpUiQNhJsRzC/fEqWhPe7D8dulQIQNJKxLKQhDRqe+btw0pyCghmZzOuu+KNa7KBFR0NZEeuPwXUcdGKKvQxDbzMxYioeHyjyR4cf92sBtn3shwFPScCD/ofpIKHWQIjaCPJ9bKRiSGCxXpucRfAzvxcKdm+XylTHkSeRbgMwPoXXDUvKIG04ujch3NuaPjbLBj4QOY+3WJaYjJh8CZPYvgR5/ooouC1ubD87eqYQByGLft2YuBKLy3d95Kc0Q8OiXXieBCrKc4BeZSab38ifseWOzEggAXqVJjaXwko4rSh9EbHM84XrqiqSrxO0cuVPfKBVQaayiCJWmHH0D066vvh0c7dYqhribOB6kkuSDeF44WVeKT5d+HMYrBws+G1gPDWqYi4uc8WgWwQOWL+QJ+j0adp/RGRQI9msmTAb3nyrCTxmUuuO+d+NMwruc9S/QTbNoaGDPamvx9q3DQ=

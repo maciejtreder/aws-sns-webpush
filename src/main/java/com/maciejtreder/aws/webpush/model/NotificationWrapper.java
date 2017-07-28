@@ -8,6 +8,5 @@ import lombok.Data;
 public class NotificationWrapper {
     private String title;
     private String body;
-    @Builder.Default
     private String icon = "./assets/icons/favicon.png";
 }
