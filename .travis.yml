@@ -7,24 +7,20 @@ jobs:
     - pip install --user awscli
     - export PATH=$PATH:$HOME/.local/bin
     - gem install push_package
-    - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-    - apt-get install -y nodejs
-    - npm install
-    - npm run deploy
-#    - push_package -w pushPackage.raw/website.json -i pushPackage.raw/icon.iconset -c src/main/resources/cert.p12 -p $SAFARI_KEY_PASSWORD
-#    - mv pushPackage.zip src/main/resources/web.com.maciejtreder.angular-universal-serverless.zip
+    - push_package -w pushPackage.raw/website.json -i pushPackage.raw/icon.iconset -c src/main/resources/cert.p12 -p $SAFARI_KEY_PASSWORD
+    - mv pushPackage.zip src/main/resources/web.com.maciejtreder.angular-universal-serverless.zip
     script: mvn clean package
     after_success:
     - aws s3 cp ./target/aws-sns-webpush-1.0-SNAPSHOT.jar s3://travis-mtr/aws-sns-webpush/
-#  - stage: deploy
-#    language: node_js
-#    node_js: node
-#    before_install:
-#    - pip install --user awscli
-#    - export PATH=$PATH:$HOME/.local/bin
-#    - aws s3 sync s3://travis-mtr/aws-sns-webpush/ ./target
-#    - npm install serverless -g
-#    script: serverless deploy
+  - stage: deploy
+    language: node_js
+    node_js: node
+    before_install:
+    - pip install --user awscli
+    - export PATH=$PATH:$HOME/.local/bin
+    - aws s3 sync s3://travis-mtr/aws-sns-webpush/ ./target
+    - npm install
+    script: npm run serverless
 env:
   global:
   - AWS_REGION: eu-central-1
