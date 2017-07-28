@@ -33,6 +33,8 @@ public class VapidSubscriptionEndpoint {
     public String subscribe(@RequestBody Subscription subscription) {
         VapidSubscription vapidSubscription = new VapidSubscription(subscription);
         this.store.put(vapidSubscription);
+
+        this.pushService.sendNotification(vapidSubscription, new Notification("Star on Github", "Don't forget to star this repo on GitHub!"));
         return "Subscription stored";
     }
 
