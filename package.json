@@ -1,0 +1,27 @@
+{
+  "name": "aws-webpush",
+  "version": "1.0.0",
+  "description": "Lambda wrapper for webpush and safari push",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate_package": "push_package -w pushPackage.raw/website.json -i pushPackage.raw/icon.iconset -c src/main/resources/cert.p12 -p $SAFARI_KEY_PASSWORD && mv pushPackage.zip src/main/resources/web.com.maciejtreder.angular-universal-serverless.zip",
+    "maven_package": "mvn clean package",
+    "serverless": "serverless deploy",
+    "deploy": "npm run generate_package && npm run maven_package && npm run serverless"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maciejtreder/aws-sns-webpush.git"
+  },
+  "author": "Maciej Treder <contact@maciejtreder.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maciejtreder/aws-sns-webpush/issues"
+  },
+  "homepage": "https://github.com/maciejtreder/aws-sns-webpush#readme",
+  "devDependencies": {
+    "serverless": "^1.18.1",
+    "serverless-apigw-binary": "^0.3.5"
+  }
+}

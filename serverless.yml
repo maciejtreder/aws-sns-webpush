@@ -1,5 +1,13 @@
 service: sns-webpush-by-maciej-treder
 
+plugins:
+  - serverless-apigw-binary
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
+
 provider:
   name: aws
   runtime: java8
