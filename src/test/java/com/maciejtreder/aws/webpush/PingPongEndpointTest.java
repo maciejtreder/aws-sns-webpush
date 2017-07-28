@@ -3,6 +3,7 @@ package com.maciejtreder.aws.webpush;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.internal.model.AwsProxyResponse;
 //import com.amazonaws.serverless.proxy.internal.servlet.AwsProxyServletContext;
+import com.amazonaws.serverless.proxy.internal.servlet.AwsServletContext;
 import com.amazonaws.serverless.proxy.internal.testutils.AwsProxyRequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class PingPongEndpointTest extends BaseTestCase {
 
 //    @Before
 //    public void clearServletContextCache() {
-//        AwsProxyServletContext.clearServletContextCache();
+//        AwsServletContext.clearServletContextCache();
 //    }
 
     @Test

@@ -25,6 +25,9 @@ public class VapidSubscriptionEndpoint {
     @Autowired
     private SubscriptionStore store;
 
+    @Autowired
+    private PushService pushService;
+
     @RequestMapping(path = "/subscribe", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String subscribe(@RequestBody Subscription subscription) {

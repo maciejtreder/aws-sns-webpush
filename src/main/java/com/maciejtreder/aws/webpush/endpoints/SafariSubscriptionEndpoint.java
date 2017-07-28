@@ -31,6 +31,9 @@ public class SafariSubscriptionEndpoint {
     @Autowired
     private SubscriptionStore subscriptionStore;
 
+    @Autowired
+    private PushService pushService;
+
     @RequestMapping(path = "/pushPackages/{websitePushID:.+}", produces = { "application/zip" }, method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<byte[]> getFile(@PathVariable(value="websitePushID") String fileName) throws IOException {
         fileName += ".zip";
