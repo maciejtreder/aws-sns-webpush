@@ -3,20 +3,20 @@ package com.maciejtreder.aws.webpush.model;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.google.gson.Gson;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import nl.martijndwars.webpush.Subscription;
 
-@DynamoDBTable(tableName = "_subscriptions")
+@DynamoDBTable(tableName = "_vapidSubscriptions")
 @Data
-public class SubscriptionWrapper {
+@NoArgsConstructor
+public class VapidSubscription implements com.maciejtreder.aws.webpush.model.Subscription {
 
     @DynamoDBHashKey(attributeName = "subscription")
     private String key;
     @DynamoDBIgnore
     private Subscription subscription;
 
-    public SubscriptionWrapper() {}
-
-    public SubscriptionWrapper(Subscription sub) {
+    public VapidSubscription(Subscription sub) {
         this.key = new Gson().toJson(sub);
         this.subscription = sub;
     }

@@ -1,0 +1,8 @@
+{
+  "websiteName": "PWA with Angular Universal by Maciej Treder",
+  "websitePushID": "web.com.maciejtreder.angular-universal-serverless",
+  "allowedDomains": ["https://www.angular-universal-serverless.maciejtreder.com"],
+  "urlFormatString": "https://www.angular-universal-serverless.maciejtreder.com/%@",
+  "authenticationToken": "dummyStringblabl",
+  "webServiceURL": "https://api.angular-universal-serverless.maciejtreder.com/webpush/safari"
+}
