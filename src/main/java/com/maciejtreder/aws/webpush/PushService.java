@@ -8,6 +8,7 @@ import com.turo.pushy.apns.ApnsClient;
 import com.turo.pushy.apns.PushNotificationResponse;
 import com.turo.pushy.apns.util.ApnsPayloadBuilder;
 import com.turo.pushy.apns.util.SimpleApnsPushNotification;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,17 +93,20 @@ public class PushService {
     private void sendNotification(Subscription subscription, String payload) {
         if (subscription instanceof VapidSubscription) {
             VapidSubscription vapidSubscription = (VapidSubscription) subscription;
+            HttpResponse response;
             try {
                 nl.martijndwars.webpush.Notification toSend = new nl.martijndwars.webpush.Notification(vapidSubscription.getSubscription(), payload);
-                this.vapidPushClient.send(toSend);
+                response = this.vapidPushClient.send(toSend);
             } catch (Exception e) {
                 //todo add logging
                 throw new RuntimeException(e);
             }
-            //todo add logging
-
+            if (response.getStatusLine().getStatusCode() > 202) {
+                Log log = new Log();
+                log.setLog(response.toString());
+                this.logsStore.put(log);
+            }
         } else {
-
             SafariSubscription safariSubscription = (SafariSubscription) subscription;
 
             Future<PushNotificationResponse<SimpleApnsPushNotification>> sendNotificationFuture = this.safariPushClient.sendNotification(new SimpleApnsPushNotification(safariSubscription.getDeviceToken(), safariSubscription.getWebsitePushId(), payload));
