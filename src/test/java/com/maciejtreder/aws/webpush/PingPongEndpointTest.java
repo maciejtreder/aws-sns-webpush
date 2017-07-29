@@ -28,12 +28,6 @@ public class PingPongEndpointTest extends BaseTestCase {
     private static final String CUSTOM_HEADER_KEY = "x-custom-header";
     private static final String CUSTOM_HEADER_VALUE = "my-custom-value";
 
-
-//    @Before
-//    public void clearServletContextCache() {
-//        AwsServletContext.clearServletContextCache();
-//    }
-
     @Test
     public void headers_getHeaders_echo() {
         AwsProxyRequest request = new AwsProxyRequestBuilder("/ping", "GET")

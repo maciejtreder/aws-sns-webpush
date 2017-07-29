@@ -34,7 +34,7 @@ public class VapidSubscriptionEndpoint {
         VapidSubscription vapidSubscription = new VapidSubscription(subscription);
         this.store.put(vapidSubscription);
 
-        this.pushService.sendNotification(vapidSubscription, new Notification("Star on Github", "Don't forget to star this repo on GitHub!"));
+        this.pushService.sendNotification(vapidSubscription, new Notification("Star on Github", "Don't forget to star this repo on GitHub!", "https://github.com/maciejtreder/angular-universal-serverless"));
         return "Subscription stored";
     }
 

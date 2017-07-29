@@ -64,7 +64,7 @@ public class SafariSubscriptionEndpoint {
     public String saveSubscription(@PathVariable("deviceToken") String deviceToken, @PathVariable("websitePushID") String websitePushID) {
         SafariSubscription subscription = new SafariSubscription(deviceToken, websitePushID);
         this.subscriptionStore.put(subscription);
-        this.pushService.sendNotification(subscription, new Notification("Star on Github", "Don't forget to star this repo on GitHub!"));
+        this.pushService.sendNotification(subscription, new Notification("Star on Github", "Don't forget to star this repo on GitHub!", "https://github.com/maciejtreder/angular-universal-serverless"));
         return "Subscription stored";
     }
 

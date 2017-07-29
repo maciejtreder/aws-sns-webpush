@@ -45,12 +45,14 @@ public class PushService {
      */
     public void sendNotification(Subscription subscription, Notification notification) {
         String payload;
+
         if (subscription instanceof VapidSubscription) {
             payload = this.getPayload(notification, Notification.Type.VAPID);
 
         } else {
             payload = this.getPayload(notification, Notification.Type.SAFARI);
         }
+        System.out.println(payload);
         this.sendNotification(subscription, payload);
     }
 
@@ -66,9 +68,6 @@ public class PushService {
         this.subscriptionStore.getSafariSubscriptions().forEach(subscription -> this.sendNotification(subscription, safariPayload));
     }
 
-
-
-
     private String getPayload (Notification notification, Notification.Type type) {
         if (type.equals(Notification.Type.VAPID)) {
             Map<String, Object> payload = new HashMap<>();
@@ -76,12 +75,19 @@ public class PushService {
             notificationContent.put("title", notification.getTitle());
             notificationContent.put("body", notification.getBody());
             notificationContent.put("icon", "./assets/icons/favicon.png");
+            if (notification.getUrl() != null && notification.getUrl().length() > 0)
+                notificationContent.put("data", notification.getUrl());
             payload.put("notification", notificationContent);
             return new Gson().toJson(payload);
+        } else {
+            ApnsPayloadBuilder builder = new ApnsPayloadBuilder();
+            if (notification.getUrl() != null && notification.getUrl().length() > 0)
+                builder.setUrlArguments("redirect/" + notification.getUrl());
+            builder.setAlertTitle(notification.getTitle());
+            builder.setAlertBody(notification.getBody());
+            return builder.buildWithDefaultMaximumLength();
         }
-        return new ApnsPayloadBuilder().setUrlArguments("").setAlertTitle(notification.getTitle()).setAlertBody(notification.getBody()).buildWithDefaultMaximumLength();
     }
-
 
     private void sendNotification(Subscription subscription, String payload) {
         if (subscription instanceof VapidSubscription) {
