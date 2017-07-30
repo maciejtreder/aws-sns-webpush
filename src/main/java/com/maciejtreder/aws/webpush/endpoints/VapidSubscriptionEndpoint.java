@@ -38,7 +38,8 @@ public class VapidSubscriptionEndpoint {
         return "Subscription stored";
     }
 
-    @RequestMapping(path = "/unsubscribe", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/unsubscribe", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public String unsubscribe(@RequestBody Subscription subscription) {
         VapidSubscription vapidSubscription = new VapidSubscription(subscription);
         this.store.delete(vapidSubscription);
