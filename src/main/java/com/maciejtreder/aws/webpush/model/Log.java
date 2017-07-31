@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@DynamoDBTable(tableName = "_safariLogs")
+@DynamoDBTable(tableName = "_logs")
 @Data
 public class Log {
     @DynamoDBHashKey

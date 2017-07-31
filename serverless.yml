@@ -11,8 +11,8 @@ custom:
 provider:
   name: aws
   runtime: java8
-  memorySize: 512
-  timeout: 30
+  memorySize: 384
+  timeout: 300
   stage: production
   region: eu-central-1
   environment:
@@ -32,7 +32,7 @@ provider:
       Resource:
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_vapidSubscriptions"
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_safariSubscriptions"
-        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_safariLogs"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:service}_logs"
 
 package:
   artifact: target/aws-sns-webpush-1.0-SNAPSHOT.jar
@@ -94,7 +94,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: '${self:service}_safariSubscriptions'
-    safariLogsTable:
+    logsTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -109,4 +109,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: '${self:service}_safariLogs'
+        TableName: '${self:service}_logs'

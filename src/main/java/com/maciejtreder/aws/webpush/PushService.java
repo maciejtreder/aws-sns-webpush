@@ -124,6 +124,7 @@ public class PushService {
                     Log safariLog = new Log();
                     safariLog.setLog(result);
                     this.logsStore.put(safariLog);
+                } else {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
