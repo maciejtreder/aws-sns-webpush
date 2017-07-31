@@ -79,8 +79,13 @@ public class PushService {
             notificationContent.put("icon", "./assets/icons/favicon.png");
             payload.put("notification", notificationContent);
             return new Gson().toJson(payload);
+        } else {
+            ApnsPayloadBuilder builder = new ApnsPayloadBuilder();
+            builder.setUrlArguments("");
+            builder.setAlertTitle(notification.getTitle());
+            builder.setAlertBody(notification.getBody());
+            return builder.buildWithDefaultMaximumLength();
         }
-        return new ApnsPayloadBuilder().setUrlArguments("").setAlertTitle(notification.getTitle()).setAlertBody(notification.getBody()).buildWithDefaultMaximumLength();
     }
 
 
