@@ -81,6 +81,7 @@ public class PushService {
             return new Gson().toJson(payload);
         } else {
             ApnsPayloadBuilder builder = new ApnsPayloadBuilder();
+            builder.setUrlArguments("");
             if (notification.getUrl() != null && notification.getUrl().length() > 0)
                 builder.setUrlArguments("redirect/" + notification.getUrl());
             builder.setAlertTitle(notification.getTitle());
