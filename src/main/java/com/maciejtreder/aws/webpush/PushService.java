@@ -112,6 +112,7 @@ public class PushService {
             final PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse;
             try {
                 pushNotificationResponse = sendNotificationFuture.get();
+                pushNotificationResponse.isAccepted();
                 if (!pushNotificationResponse.isAccepted()) {
                     String result = "Notification rejected by the APNs gateway: " +
                             pushNotificationResponse.getRejectionReason();
@@ -123,7 +124,6 @@ public class PushService {
                     Log safariLog = new Log();
                     safariLog.setLog(result);
                     this.logsStore.put(safariLog);
-                } else {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
