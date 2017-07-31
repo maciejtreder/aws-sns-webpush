@@ -53,7 +53,6 @@ public class PushService {
         } else {
             payload = this.getPayload(notification, Notification.Type.SAFARI);
         }
-        System.out.println(payload);
         this.sendNotification(subscription, payload);
     }
 
