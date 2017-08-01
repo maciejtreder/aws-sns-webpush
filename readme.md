@@ -9,7 +9,7 @@ Service can be deployed on AWS Lambda. It is listening for SNS events, on fires 
 There are several steps to start using this service:
 * Install maven - for building Java project
 * Install node - for easy deployment with Serverless framework
-* VAPID_PUBLIC_KEY & VAPID_PRIVATE_KEY environment variables - can be generated with Push Companion app https://web-push-codelab.appspot.com
+* VAPID_PUBLIC_KEY & VAPID_PRIVATE_KEY environment variables - can be generated with [Push Companion app](https://web-push-codelab.appspot.com)
 * SAFARI_KEY_PASSWORD environment variable - used to protect your Safari key
 
 ```sh
@@ -26,7 +26,7 @@ npm deploy
 
 ## Customization
 
-There is a plan, to support customization of this service (enabling only vapid subscription, or only safari), you can track it in (this issue).
+There is a plan, to support customization of this service (enabling only vapid subscription, or only safari), you can track it in [this issue](https://github.com/maciejtreder/aws-sns-webpush/issues/2).
 
 ## Vapid push notifications
 
