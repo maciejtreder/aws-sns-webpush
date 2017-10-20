@@ -7,9 +7,8 @@ jobs:
     - pip install --user awscli
     - export PATH=$PATH:$HOME/.local/bin
     - gem install push_package
-    - push_package -w pushPackage.raw/website.json -i pushPackage.raw/icon.iconset
-      -c src/main/resources/cert.p12 -p $SAFARI_KEY_PASSWORD
-    - mv pushPackage.zip src/main/resources/web.com.maciejtreder.angular-universal-serverless.zip
+    - push_package -w pushPackage.raw/website.json -i pushPackage.raw/icon.iconset -c src/main/resources/cert.p12 -p $SAFARI_KEY_PASSWORD
+    - mv pushPackage.zip src/main/resources/web.com.maciejtreder.angular-universal-pwa.zip
     script: mvn clean package
     after_success:
     - aws s3 cp ./target/aws-sns-webpush-1.0-SNAPSHOT.jar s3://travis-mtr/aws-sns-webpush/
